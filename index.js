@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const res = require('express/lib/response');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -15,9 +16,29 @@ app.get('/', (req, res) => {
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.oyqsogu.mongodb.net/?retryWrites=true&w=majority`;
-console.log(uri)
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+async function run() {
+    try {
+        const serviceCollection = client.db('photodb').collection('service')
+        app.get('/service', async(req, res) => {
+            const query = {}
+            const cursor = serviceCollection.find(query)
+            const service = await cursor.limit(3).toArray()
+            res.send(service)
+        })
+        app.get('/services', async(req, res) => {
+            const query = {}
+            const cursor = serviceCollection.find(query)
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
+    } finally {
+
+    }
+}
+run().catch(error => console.error(error))
 
 
 
