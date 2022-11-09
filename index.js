@@ -24,7 +24,7 @@ async function run() {
         const addServicesCollection = client.db('photodb').collection('add')
         app.get('/service', async(req, res) => {
             const query = {}
-            const cursor = serviceCollection.find(query)
+            const cursor = serviceCollection.find().sort({ _id: -1 })
             const service = await cursor.limit(3).toArray()
             res.send(service)
         })
@@ -41,13 +41,14 @@ async function run() {
             res.send(result)
 
         })
-
-        //add services item
-        app.post('/add', async(req, res) => {
+        app.post('/service', async(req, res) => {
             const add = req.body;
-            const result = await addServicesCollection.insertOne(add);
+            const result = await serviceCollection.insertOne(add);
             res.send(result);
         });
+
+        //add services item
+
         app.get('/add', async(req, res) => {
             const query = {}
             const cursor = addServicesCollection.find(query)
