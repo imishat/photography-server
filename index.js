@@ -69,6 +69,19 @@ async function run() {
             const result = await cursur.toArray();
             res.send(result)
         })
+        app.get('/review', async(req, res) => {
+            let query = {};
+
+            if (req.query.email) {
+                query = {
+                    email: req.query.email
+                }
+            }
+
+            const cursor = reviewCollection.find(query);
+            const orders = await cursor.toArray();
+            res.send(orders);
+        });
 
 
 
