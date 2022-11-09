@@ -22,6 +22,7 @@ async function run() {
     try {
         const serviceCollection = client.db('photodb').collection('service')
         const addServicesCollection = client.db('photodb').collection('add')
+        const reviewCollection = client.db('photodb').collection('review')
         app.get('/service', async(req, res) => {
             const query = {}
             const cursor = serviceCollection.find().sort({ _id: -1 })
@@ -50,12 +51,26 @@ async function run() {
         //add services item
 
         app.get('/add', async(req, res) => {
-            const query = {}
-            const cursor = addServicesCollection.find(query)
-            const result = await cursor.toArray()
-            res.send(result)
+                const query = {}
+                const cursor = addServicesCollection.find(query)
+                const result = await cursor.toArray()
+                res.send(result)
 
+            })
+            // add rewiew 
+        app.post('/review', async(req, res) => {
+            const query = req.body;
+            const result = await reviewCollection.insertOne(query);
+            res.send(result)
         })
+        app.get('/review', async(req, res) => {
+            const query = {}
+            const cursur = reviewCollection.find(query)
+            const result = await cursur.toArray();
+            res.send(result)
+        })
+
+
 
 
     } finally {
