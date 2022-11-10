@@ -111,13 +111,13 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result);
         });
-        app.delete('/review/:id', verifyJWT, async(req, res) => {
+        app.delete('/review/:id', async(req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await reviewCollection.deleteOne(query);
             res.send(result);
         })
-        app.patch('/review/:id', verifyJWT, async(req, res) => {
+        app.patch('/review/:id', async(req, res) => {
             const id = req.params.id;
             const status = req.body.status
             const query = { _id: ObjectId(id) }
